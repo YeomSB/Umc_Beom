@@ -2,13 +2,13 @@ package umc.spring.domain;
 
 import lombok.*;
 import umc.spring.domain.common.BaseEntity;
+import umc.spring.domain.enums.MissionStatus;
 import umc.spring.domain.mapping.MemberMission;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Entity
 @Getter
@@ -27,10 +27,21 @@ public class Mission extends BaseEntity {
 
     private String missionSpec;
 
+    private MissionStatus missionStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
 
+    @Builder.Default
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL)
     private List<MemberMission> memberMissionList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }
