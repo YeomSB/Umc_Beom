@@ -1,8 +1,8 @@
 package umc.spring.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
-import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import umc.spring.apiPayload.code.status.ErrorStatus;
 import umc.spring.apiPayload.exception.handler.FoodCategoryHandler;
 import umc.spring.converter.MemberConverter;
@@ -14,12 +14,12 @@ import umc.spring.repository.FoodCategoryRepository;
 import umc.spring.repository.MemberRepository;
 import umc.spring.web.dto.MemberRequestDTO;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberCommandServiceImpl implements MemberCommandService{
 
     private final MemberRepository memberRepository;
@@ -39,6 +39,11 @@ public class MemberCommandServiceImpl implements MemberCommandService{
 
         memberPreferList.forEach(memberPrefer -> {memberPrefer.setMember(newMember);});
 
+
         return memberRepository.save(newMember);
+    }
+    @Transactional(readOnly = true)
+    public boolean existsById(Long id) {
+        return memberRepository.existsById(id);
     }
 }
